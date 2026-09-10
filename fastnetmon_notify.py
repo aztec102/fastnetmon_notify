@@ -113,7 +113,11 @@ def create_image_attack_details(data):
         list: list of str, paths to images of attack_details
     """
     # crop useless data
-    data = data.split('Flows have cropped due to very long list.')[1].strip()
+    if "Flow dump" in data:
+        data = data.split('Flow dump')[0].strip()
+    else:
+        data = data.split('Flows have cropped due to very long list.')[1].strip()
+
 
     # settings for html to image convertor
     shot = WebShot()

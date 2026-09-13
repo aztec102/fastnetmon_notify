@@ -39,7 +39,7 @@ import requests
 import platform
 import subprocess
 import json
-
+import time
 from htmlwebshot import WebShot
 
 
@@ -183,17 +183,19 @@ def main():
     # Get all passed arguments.
     message = " ".join(sys.argv[1:])
 
-    # If message contain 'attack_details', send images.
-    if 'attack_details' in message:
+    if 'unban' in message:
+        send_message(MSG_TEMPLATE.format(message))
+    else:
+        send_message(MSG_TEMPLATE.format(message))
+        # Даем 5 секунд чтобы отчёт явно записался
+        time.sleep(5)
         status_get_attack_details, data = get_attack_details(message)
         if not status_get_attack_details:
             send_message(MSG_TEMPLATE.format(f"Can't get attack_details: {data}"))
         else:
             paths_images_attack_details = create_image_attack_details(data)
+            message = message.replace("ban", "attack_details")
             send_media(message, paths_images_attack_details)
-    else:
-        send_message(MSG_TEMPLATE.format(message))
-
 
 if __name__ == "__main__":
     main()
